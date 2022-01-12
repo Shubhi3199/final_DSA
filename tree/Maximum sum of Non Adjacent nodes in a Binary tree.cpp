@@ -21,3 +21,5 @@ class Solution{
         return max(max_sum.first, max_sum.second);
     }
 };
+
+// https://practice.geeksforgeeks.org/problems/maximum-sum-of-non-adjacent-nodes/1/?company[]=Amazon&company[]=Amazon&difficulty[]=1&page=1&query=company[]Amazondifficulty[]1page1company[]Amazon
