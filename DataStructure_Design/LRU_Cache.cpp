@@ -1,73 +1,68 @@
 class LRUCache {
 public:
-    class node {
-        public:
-            int key;
-            int val;
-            node* next;
-            node* prev;
-        node(int _key, int _val) {
+    class Node {
+    public:
+        int key, value;
+        Node* next, *prev;
+        Node(int _key, int _value) {
             key = _key;
-            val = _val; 
+            value = _value;
         }
     };
     
-    node* head = new node(-1,-1);
-    node* tail = new node(-1,-1);
+    Node *head = new Node(-1, -1);
+    Node *tail = new Node(-1, -1); // head and tail are the dummy nodes that define are LRU cache, the moost recently used page will be located to the next of head and the least recently used page will be located to the prev of the tail.
     
-    int cap;
-    unordered_map<int, node*>m;
+    unordered_map<int, Node*> page_map; // used to access the page in the DLL in O(1) time
+    int size; // max_size of the LRU cache
     
     LRUCache(int capacity) {
-        cap = capacity;    
-        head->next = tail;
-        tail->prev = head;
+        size = capacity;
+        head -> next = tail;
+        tail -> prev = head;
     }
     
-    void addnode(node* newnode) {
-        node* temp = head->next;
-        newnode->next = temp;
-        newnode->prev = head;
-        head->next = newnode;
-        temp->prev = newnode;
+    // delete_node and add_node only modify the DLL, get() and put() are used to modify the page_map 
+    void delete_node(Node* node) {
+        node -> prev -> next = node -> next;
+        node -> next -> prev = node -> prev;
     }
     
-    void deletenode(node* delnode) {
-        node* delprev = delnode->prev;
-        node* delnext = delnode->next;
-        delprev->next = delnext;
-        delnext->prev = delprev;
+    void add_node(Node* node) {
+        Node* temp = head -> next;
+        node -> next = temp;
+        temp -> prev = node;
+        head -> next = node;
+        node -> prev = head;
     }
     
-    int get(int key_) {
-        if (m.find(key_) != m.end()) {
-            node* resnode = m[key_];
-            int res = resnode->val;
-            m.erase(key_);
-            deletenode(resnode);
-            addnode(resnode);
-            m[key_] = head->next;
-            return res; 
+    int get(int key) {
+        if (page_map.count(key) == false) return -1;
+        int val = page_map[key] -> value;
+        Node* node = page_map[key];
+        page_map.erase(key);
+        delete_node(node);
+        add_node(node); // add node to head -> next as this is the most recently used node
+        page_map[key] = head -> next;
+        return val;
+    }
+    
+    void put(int key, int value) {
+        if (page_map.count(key)) {
+            // the key already exists and we just update the value and add the node as most recently used
+            delete_node(page_map[key]);
+            page_map.erase(key);
         }
-    
-        return -1;
-    }
-    
-    void put(int key_, int value) {
-        if(m.find(key_) != m.end()) {
-            node* existingnode = m[key_];
-            m.erase(key_);
-            deletenode(existingnode);
+        if (page_map.size() == size) {
+            // over flow condition, so we get rid of the least recently used page (tail -> prev)
+            page_map.erase(tail -> prev -> key);
+            delete_node(tail -> prev);
         }
-        if(m.size() == cap) {
-          m.erase(tail->prev->key);
-          deletenode(tail->prev);
-        }
-        
-        addnode(new node(key_, value));
-        m[key_] = head->next; 
+        add_node(new Node(key, value));
+        page_map[key] = head -> next;
     }
 };
+
 /**
  * Your LRUCache object will be instantiated and called as such:
  * LRUCache* obj = new LRUCache(capacity);
