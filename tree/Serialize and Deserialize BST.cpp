@@ -7,6 +7,9 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+
+
+// Seerialize by performing preorder traversal and then desrialze by using the same in O(N) time by using the core property of BST (IMP)
 class Codec {
 public:
 
