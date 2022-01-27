@@ -1,3 +1,4 @@
+// https://practice.geeksforgeeks.org/problems/longest-k-unique-characters-substring0853/1/#
 class Solution{
   public:
     int longestKSubstr(string s, int k) {
