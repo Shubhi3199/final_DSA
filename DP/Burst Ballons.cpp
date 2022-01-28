@@ -1,7 +1,7 @@
 class Solution {
 public:
     int maxCoins(vector<int>& nums) {
-        // max_coins[i][j] => stores the max coins that can be collected by bursting ballons in the range [i to j] from the entire array
+        // max_coins[i][j] => stores the max coins that can be collected by bursting ballons in the range [i to j] from the entire array but this subproblem is not independent of the entire array
         vector<vector<int>> max_coins(nums.size(), vector<int> (nums.size()));
         for (int gap = 0; gap < nums.size(); gap++) {
             for (int start = 0; start + gap < nums.size(); start++) {
@@ -11,6 +11,9 @@ public:
                 // 2. Delete B ballon at last, total coins => dp[A][A] + nums[B] + dp[C][D]
                 // 3. Delete C ballon at last, total coins => dp[A][B] + nums[C] + dp[D][D]
                 // 4. Delete D ballon at last, total coins => dp[A][C] + num[D]
+                
+                // The main idea behind the strategy that we assume the current ballon to burst at last is so that the left and the right subproblem are now independent as it's fixed that till the end for the left half, the cur baloon will act as the right ele and for the right half the cur ballon will act  as the left ele
+                // Originally the subproblem calculation in this question is dependent on the order in which nbrs are burst (i.e. we don't have independent subproblems) and thus it becomes important to fix a ballon and ensure that it bursts at last so tah tthe left and right have become independent of each other (becasuse I know whts there on the other side)
                 int coins = INT_MIN;
                 for (int divider = start; divider <= end; divider++) {
                     int left_coins = (divider == start ? 0 : max_coins[start][divider-1]);
