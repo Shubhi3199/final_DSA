@@ -1,4 +1,3 @@
-// https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/submissions/
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -29,7 +28,7 @@ public:
             slow = slow -> next;
             fast = fast -> next -> next;
         }
-        return {prev, slow};
+        return {prev, slow}; // prev pointer to the mid is neccessary to be returned so as to make mid's prev node point to null as when we'll recursively make a call to mid's left then the last node in the left LL should not have a connection with the right half to avoid repetation 
     }
     TreeNode* sortedListToBST(ListNode* head) {
         if (head == NULL) return NULL;
