@@ -1,7 +1,6 @@
 class Solution {
 public:
     vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& new_intv) {
-        sort(intervals.begin(), intervals.end());
         vector<vector<int>> merged;
         for (int idx = 0; idx < intervals.size(); idx++) {
             vector<int> cur_intv = intervals[idx];
