@@ -18,7 +18,7 @@ public:
         int n = board.size(), m = board[0].size();
         // old state   new state  key
         //    0            0       0
-        //    0            1       2
+        //    0            1       2 (here we have swapped key 1 & 2 as it becomes confusing)
         //    1            0       1
         //    1            1       3
         for (int row = 0; row < n; row++) {
